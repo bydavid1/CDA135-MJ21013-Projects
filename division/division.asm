@@ -1,42 +1,43 @@
 section .bss
     valueToPrint resb 1
     inputBuffer  resb 16
-    number1      resw 1 ; 16 bits
-    number2      resw 1 ; 16 bits
-    result       resw 1
+    number1      resd 1  ; 32 bits
+    number2      resd 1  ; 32 bits
+    result       resd 1
 
 section .data
-    prompt db "Ingrese un numero del 0 a 255: ", 0
+    prompt db "Ingresa un numero: ", 0
     len_prompt equ $ - prompt
 
 section .text
     global _start
 
 _start:
-    ; Leer primer número
+    ; Leer el primer número
     mov ecx, prompt
     mov edx, len_prompt
     call print_string
 
     call read_number
-    mov [number1], al
+    mov [number1], eax  ; guardar el número
 
-    ; Leer segundo número
+    ; Leer el segundo número
     mov ecx, prompt
     mov edx, len_prompt
     call print_string
 
     call read_number
-    mov [number2], al
+    mov [number2], eax  ; guardar el número
 
-    ; Multiplicar los valores
-    mov al, [number1] ; cargar el primer numero en al
-    mov bl, [number2] ; cargar el segundo numero en bl
-    mul bl ; multiplicar al * bl, resultado en ax
+    ; Dividir los números
+    mov eax, [number1]
+    mov ebx, [number2]
+    cdq  ; extender el signo de eax a edx
+    idiv ebx  ; dividir edx:eax por ebx, resultado en eax
 
-    mov [result], ax
+    mov [result], eax  ; guardar el resultado
 
-    ; Convertir el valor a ASCII y mostrarlo
+    ; Convertir el valor a ASCII
     mov eax, [result]
     call convert_values
     call endl
@@ -63,7 +64,6 @@ read_number:
     mov ecx, eax
     mov esi, inputBuffer
     xor eax, eax
-    xor ebx, ebx
 
 .read_loop:
     movzx edx, byte [esi]
@@ -77,7 +77,7 @@ read_number:
 convert_values:
     mov edx, 0
     mov ecx, 0x0A
-    idiv ecx 
+    idiv ecx
     push eax
     mov eax, edx
     add eax, '0'
@@ -86,12 +86,12 @@ convert_values:
     or eax, eax
     jnz convert_values
 
-endl: ; salto de linea
+endl:
     mov eax, 10
     call print_char
     ret
 
-print_char: ; imprimir un caracter
+print_char:
     mov [valueToPrint], eax
     mov eax, 4
     mov ebx, 1
