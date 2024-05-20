@@ -1,9 +1,9 @@
 section .bss
     valueToPrint resb 1
     inputBuffer  resb 16
-    number1      resw 1 ; 16 bits
-    number2      resw 1 ; 16 bits
-    result       resw 1
+    number1 resb 1 ; 8 bits
+    number2 resb 1 ; 8 bits
+    result resw 1
 
 section .data
     prompt db "Ingrese un numero del 0 a 255: ", 0

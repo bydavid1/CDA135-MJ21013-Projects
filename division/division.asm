@@ -1,9 +1,9 @@
 section .bss
     valueToPrint resb 1
     inputBuffer  resb 16
-    number1      resd 1  ; 32 bits
-    number2      resd 1  ; 32 bits
-    result       resd 1
+    number1 resd 1  ; 32 bits
+    number2 resd 1  ; 32 bits
+    result resd 1
 
 section .data
     prompt db "Ingresa un numero: ", 0
